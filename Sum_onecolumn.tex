@@ -1,0 +1,158 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage{ucs}
+\usepackage[left=2.00cm, right=2.00cm, top=2.00cm, bottom=2.00cm]{geometry}
+\renewcommand\familydefault{\sfdefault}
+
+\title{Summary - \lecture}
+\author{}
+\date{}
+
+
+%costum layout
+\setlength{\parindent}{0cm}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{
+	\strut\rlap{\colorlayout\rule[-\dp\strutbox]{\headwidth}{\headheight}}
+	\textcolor {white} {Summary: \lecture}}
+\fancyfoot[L]{
+	\strut\rlap{\colorlayout\rule[-\dp\strutbox]{\headwidth}{\headheight}}
+	\textcolor {white} {last changed: \today}}
+\fancyhead[R]{\textcolor{white}{\semseter}}
+\fancyfoot[R]{\textcolor{white} {\thepage}}
+
+
+%math
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amstext}
+\usepackage{mathtools}
+
+
+%graphics
+\usepackage{graphicx}
+\usepackage{floatflt}
+\usepackage{float}
+
+
+%tabular
+\usepackage{tabularx}
+\usepackage[font=small,labelfont=small]{caption}
+\usepackage{colortbl}
+\usepackage[dvipsnames]{xcolor}
+\renewcommand{\arraystretch}{1.5}
+%\arrayrulecolor{white}
+
+
+%tikz
+\usepackage{tikz}
+\usetikzlibrary{shapes, petri}
+\tikzstyle{ell}=[ellipse,draw, yshift=-2mm]
+\tikzstyle{rec} = [rectangle, draw]
+\tikzstyle{dia} = [diamond, aspect=2, draw, yshift=-5mm]
+\tikzstyle{cir} = [circle, draw, minimum size=3mm]
+\tikzstyle{arrHV} = [to path={-| (\tikztotarget)}]
+\tikzstyle{arrVH} = [to path={|- (\tikztotarget)}]
+\tikzstyle{whileright} = [xshift=20mm, yshift=-3mm]
+\tikzstyle{whileleft} = [xshift=-20mm, yshift=-3mm]
+\tikzstyle{txtright} = [above, xshift=15mm]
+\tikzstyle{txtleft} = [above, xshift=-15mm]
+\tikzstyle{empty} = [coordinate]
+\usetikzlibrary{positioning}
+
+
+%listings
+\usepackage{listings}
+\lstdefinestyle{costum} {
+	language=Bash,
+	basicstyle=\footnotesize\ttfamily,
+	keywordstyle=\bfseries\color{cyan!50!blue},
+	commentstyle=\itshape\color{black!50},
+	%identifierstyle=\color{blue},
+	stringstyle=\color{green!50!black},
+	morekeywords={returns, loop, each},
+	escapeinside={\%*}{*)}
+}
+\lstset{style=costum}
+
+
+%%custom title color
+%\usepackage{titlesec}
+%\setcounter{secnumdepth}{4}
+%
+%\titleformat{\section}
+%{\color{cyan!80!blue}\normalfont\Large\bfseries}
+%{\color{black}\thesection}{1em}{}
+%
+%\titleformat{\subsubsection}
+%{\color{blue!30!black!70}\normalfont\bfseries}
+%{\color{black}\thesection}{1em}{}
+%
+%\titleformat{\paragraph}
+%{\color{green!30!black!70}\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+%\titlespacing*{\paragraph}
+%{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+
+%tab
+\newcommand{\tab}[1][1]{\hspace*{#1cm}}
+
+
+%hyperref
+\usepackage{hyperref}
+
+
+%vector
+\newcommand{\vect}[1]{\ensuremath{\begin{bmatrix}#1\end{bmatrix}}}
+
+%TODO
+%config
+\newcommand{\lecture}{Introduction to Deep Learning} %title of the lecture
+\newcommand{\lecturer}{Nießner M.} %lecturer of the lecture
+\newcommand{\semseter}{summer semester 2020} %semester of this lecture, e.g., summer semester 2019
+\newcommand{\colorlayout}{\color{cyan!50!blue}} %color of the title bar, see colors
+
+%colors, e.g,
+%cyan!50!blue
+%green!50!black
+%orange!50!black
+
+%user
+
+
+%TODO
+% a user defined todo list
+
+
+
+\begin{document}
+\tableofcontents
+\pagebreak
+
+\section{}
+
+\pagebreak
+\section*{Notes}
+This is a summary of the lecture~\lecture~of the Technical University Munich.
+This lecture was presented by~\lecturer~in the~\semseter.
+This summary was created by Gaida B.
+All provided information is without guarantee.
+
+
+%\section*{References}
+%author. \textit{title}. publisher. location, year, 
+
+\end{document}
+
+%TODO check for todos
+
+
+
+
+
+
+
+
