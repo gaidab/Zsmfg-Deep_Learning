@@ -287,13 +287,32 @@ $$
 
 \section{Neural Network}
 \subsection{Activation Functions}
-\subsubsection{Description}
+\textbf{Description} \\
 %TODO
 
+\textbf{Parameters:} \\
+\begin{tabular}{ll}
+	$\hat y$: & Prediction \\
+	$\hat y_j$: & Prediction of $j$-th output ($j$-th Neuron of output layer) \\
+	$h$: & Outputs of hidden layer \\
+	$s$: & Output of layer (before activation) \\
+	$s_j$: & Output of the $j$-th neuron in layer (before activation) \\
+	$C$: & Number of classes (number of neurons in output layer)
+\end{tabular}
+
 \subsubsection{Sigmoid}
+\begin{itemize}
+	\item Used for Binary Classification to output a probability matching first or second class
+	\item \textbf{Output:} $\hat y = (0, 1)$
+	\item If used as activation function in hidden layer (typically it is not)
+	\begin{itemize}
+		\item[\cons] Output is always positive
+		\item[\cons] Saturates for high positive or low negative values → kills the gradient flow
+	\end{itemize}	
+\end{itemize}
 \begin{tabularx}{\columnwidth}{XX}
 	$$
-	\sigma(x) = \frac 1 {1 + e^{-x}}
+	\sigma(s) = \frac 1 {1 + e^{-s}}
 	$$ &\\&
 	
 	\begin{tikzpicture}
@@ -308,11 +327,25 @@ $$
 	\end{tikzpicture}
 \end{tabularx}
 
+\subsubsection{Softmax}
+\begin{itemize}
+	\item Used for Multiclass Classification to output a probability matching the $i$-th class
+	\item \textbf{Output:} $\hat y_j = (0, 1)$
+\end{itemize}
 
-\subsubsection{Tanh(x)}
+$$
+	\hat y_j = \frac{e^{s_j}}{\sum_{k = 1, k ≠ j}^{C} e^{s_k}}
+$$
+
+
+\subsubsection{Tanh (Hyperbolic Tanjant Function)}
+\begin{itemize}
+	\item[\cons] Saturates for high positive or low negative values → kills the gradient flow
+\end{itemize}
+
 \begin{tabularx}{\columnwidth}{XX}	
 	$$
-	\tanh(x)
+		h = \tanh(s)
 	$$ &\\&
 	
 	\begin{tikzpicture}
@@ -327,10 +360,19 @@ $$
 	\end{tikzpicture}
 \end{tabularx}
 
-\subsubsection{ReLU}
+\subsubsection{ReLU (Rectified Linear Units)}
+\begin{itemize}
+	\item Standard choice for activation function
+	\item[\pros] Does not saturate
+	\item[\pros] Large and consistent gradients
+	\item[\pros] Fast convergence
+	\item[\cons] Dead ReLU if output is zero
+	\item Initialization of ReLU neurons with slightly positive biases (e.g. $0.01$) → Likely to stay active for most inputs
+\end{itemize}
+
 \begin{tabularx}{\columnwidth}{XX}	
 	$$
-	\max(0, x)
+		h = \max(0, s)
 	$$ &\\&
 	
 	\begin{tikzpicture}
@@ -346,9 +388,13 @@ $$
 \end{tabularx}
 
 \subsubsection{Leaky ReLU}
+\begin{itemize}
+	\item[\pros] Does not die
+\end{itemize}
+
 \begin{tabularx}{\columnwidth}{XX}	
 	$$
-	\max(0.1x, x)
+		h = \max(0.1s, s)
 	$$ &\\&
 	
 	\begin{tikzpicture}
@@ -364,23 +410,55 @@ $$
 \end{tabularx}
 
 \subsubsection{Parametric ReLU}
+\begin{itemize}
+	\item[\pros] Does not die
+\end{itemize}
+
 $$
-\max(\alpha x, x)
+	h = \max(\alpha s, s)
 $$
 
 \subsubsection{ELU}
 $$
-f(x) = \begin{cases}
-x & \text{if } x > 0 \\
-\alpha (e^x - 1) & \text{if } x ≤ 0
+f(s) = \begin{cases}
+s & \text{if } s > 0 \\
+\alpha (e^s - 1) & \text{if } s ≤ 0
 \end{cases}
 $$
 
 \subsubsection{Maxout}
+\begin{itemize}
+	\item[\pros] Generalization of ReLUs
+	\item[\pros] Linear regimes
+	\item[\pros] Does not die
+	\item[\pros] Does not saturate
+	\item[\cons] Increases the number of parameters
+\end{itemize}
 $$
-\max(w_1^Tx + b_1, w_2^T x + b_2)
+ 	h = \max(w_1^Ts + b_1, w_2^T s + b_2)
 $$
 
+\subsubsection{Step Function}
+\begin{tabularx}{\columnwidth}{XX}	
+	$$
+		h = \begin{cases}
+			0 & \text{if } s < 0 \\
+			1 & \text{if } s ≥ 0 \\
+		\end{cases}
+	$$ &\\&
+	
+	\begin{tikzpicture}
+	\begin{axis}[
+	xmin=-10, xmax=10,
+	ymin=-1, ymax=2,
+	axis y line=middle,
+	axis x line=middle,
+	]
+	\addplot+[blue, domain=-10:0, samples=100, mark=none] {0};
+	\addplot+[blue, domain=0:10, samples=100, mark=none] {1};
+	\end{axis}
+	\end{tikzpicture}
+\end{tabularx}
 
 
 \subsection{Loss Function}
@@ -394,31 +472,56 @@ A function to measure the goodness of the predictions
 
 \subsubsection{Parameters}
 \begin{tabular}{ll}
-	$y$: & Ground truth \\
-	$\hat y$: & Prediction \\
+	$y_i$: & Ground truth of $i$-th sample \\
+	$\hat y_i$: & Prediction of $i$-th sample \\
 	$n$: & number of training samples \\
-	$k$: & number of classes
+	$k$: & number of classes \\
+	$\hat y_{i, gt}$: & Prediction of ground truth class of $i$-th sample (where $y_{ij} = 1$)
 \end{tabular}
 
 \subsubsection{L1 Loss}
+\begin{itemize}
+	\item Sum of absolute differences
+	\item Robust (cost of outliers is linear)
+	\item Costly to optimize
+	\item Optimum is median
+\end{itemize}
 $$
 	\mathcal L(y, \hat y; \theta) = \frac 1 n \sum_i^n ||y_i - \hat y_i||_1
 $$
 
-\subsubsection{MSE Loss}
+\subsubsection{L2/MSE Loss}
+\begin{itemize}
+	\item Sum of squared differences
+	\item Prone to outliers
+	\item Compute-efficient optimization
+	\item Optimum is mean
+\end{itemize}
 $$
 	\mathcal L(y, \hat y; \theta) = \frac 1 n \sum_i^n ||y_i - \hat y_i||_2^2
 $$
 
 \subsubsection{Binary Cross Entropy}
 $$
-	\mathcal L(y, \hat y; \theta) = - \sum_{i = 1}^n (y_i \log \hat y_i + (1 - y_i) \log(1 - \hat y_i))
+	\mathcal L(y, \hat y; \theta) = - \frac 1 n \sum_{i = 1}^n (y_i \log \hat y_i + (1 - y_i) \log(1 - \hat y_i))
 $$
 
 \subsubsection{Cross Entropy}
+\begin{itemize}
+	\item Loss is typically always $> 0$ → Always improvement
+\end{itemize}
 $$
-	\mathcal L(y, \hat y; \theta) = - \sum_{i = 1}^n \sum_{j = 1}^k (y_{ij} \log \hat y_{ij})
+	\mathcal L(y, \hat y; \theta) = - \frac 1 n \sum_{i = 1}^n \sum_{j = 1}^k (y_{ij} \log \hat y_{ij})
 $$
+
+\subsubsection{Hinge Loss (SVM Loss)}
+\begin{itemize}
+	\item Loss can become $= 0$ → Saturation
+\end{itemize}
+$$
+	\mathcal L(y, \hat y; \theta) = \frac 1 n \sum_{i = 1}^n \sum_{{j = 1,} \atop {j ≠ gt}}^k \max(0, \hat y_{ij} - \hat y_{i,gt} + 1)
+$$
+
 
 \subsection{Optimization Functions}
 \subsubsection{General Optimization}
@@ -897,6 +1000,20 @@ $$
 		\item Validation data (e.g. 20\%, 10\%) - Validate the current model to find the best hyperparameters
 		\item Test data (e.g. 20\%, 10\%) - Is only used once in the end
 	\end{itemize}
+\end{itemize}
+
+\subsection{Weight initialization}
+\textbf{Bad choice:} \\
+\begin{itemize}
+	\item All weights $= 0$ → No symmetry breaking
+	\item Small Random Numbers → Output becomes zero using tanh as activation function → Vanishing gradient
+	\item Big Random Numbers → Output saturates to $-1$ and $1$ using tanh as activation function → Vanishing gradient
+\end{itemize}
+
+\subsubsection{Xavier Initialization}
+\begin{itemize}
+	\item Gaussian with zero mean and $var(w) = \frac 1 n$ ($n$: number of weight per neuron)
+	\item For ReLU: $Var(w) = \frac 2 n$
 \end{itemize}
 
 \subsection{Errors}
