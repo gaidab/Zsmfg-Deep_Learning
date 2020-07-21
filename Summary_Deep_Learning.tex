@@ -133,7 +133,28 @@
 
 
 %TODO
-% a user defined todo list
+%FINISHED Lecture Chapter:
+%Chap 1: cc
+%Chap 2: cc
+%Chap 3: cc
+%Chap 4: cc
+%Chap 5: cc
+%Chap 6: cc
+%Chap 7: cc
+%Chap 8: cc
+%Chap 9:
+%Chap 10:
+%Chap 11:
+%Chap 12:
+
+%FINISHED Summary Chapter
+%Chap Machine Learning Basics: cf
+%Chap Linear Models: cf
+%Chap Computational Graphs: cf
+%Chap Neural Network: f
+%Chap FCNN: cf
+%Chap Conv NN:
+%Chap Training:
 
 
 
@@ -148,7 +169,7 @@
 	\begin{itemize}
 		\item No label or target class
 		\item Find out properties of the structure of the data
-		\item clustering (k-means, PCA, etc.)
+		\item Clustering (k-means, PCA, etc.)
 	\end{itemize}
 	\item Supervised Learning
 	\begin{itemize}
@@ -169,22 +190,15 @@
 	\end{itemize}
 \end{itemize}
 
-\subsection{Obtaining the model}
-\begin{enumerate}
-	\item Estimating using current model
-	\item Calculating loss
-	\item Optimizing the model
-\end{enumerate}
-
 \subsection{Linear Regression}
 \subsubsection{Linear Model}
 \begin{tabular}{ll}
-	$i$: & index of current sample \\
-	$j$: & index of current weight \\
-	$d$: & input dimension/number of weights \\
-	$x_{ij}$: & $i$-th input data/feature of the $j$-th weight \\
-	$\theta_0$: & bias \\
-	$\theta_j$: & weights \\
+	$i$: & Index of current sample \\
+	$j$: & Index of current weight \\
+	$d$: & Input dimension/number of weights \\
+	$x_{ij}$: & $i$-th Input data/feature of the $j$-th weight \\
+	$\theta_0$: & Bias \\
+	$\theta_j$: & Weights \\
 	$\hat y_i$: & $i$-th Prediction/Estimation (predicted label)
 \end{tabular}
 
@@ -202,7 +216,7 @@ Measures how good my estimation is and tells the optimization method how to make
 
 \paragraph{Linear Least Squares:} ~\\
 \begin{tabular}{ll}
-	$n$: & number of training samples \\
+	$n$: & Number of training samples \\
 	$y$: & Ground truth labels \\
 	$\hat y$: & Estimated labels
 \end{tabular}
@@ -216,7 +230,7 @@ $$
 $$
 
 \subsubsection{Optimization}
-Changes the model in order to improve the loss function/estimation
+Changes the model in order to improve the loss function/estimation:
 $$
 	\theta = (X^TX)^{-1}X^Ty
 $$
@@ -224,16 +238,16 @@ $$
 \subsection{Logistic Regression}
 \subsubsection{Model}
 \begin{tabular}{ll}
-	$i$: & index of current sample \\
-	$j$: & index of current weight \\
-	$d$: & input dimension/number of weights \\
-	$x_{ij}$: & $i$-th input data/feature of the $j$-th weight \\
-	$\theta_j$: & model parameters \\
+	$i$: & Index of current sample \\
+	$j$: & Index of current weight \\
+	$d$: & Input dimension/number of weights \\
+	$x_{ij}$: & $i$-th Input data/feature of the $j$-th weight \\
+	$\theta_j$: & Model parameters (Bias + Weights)\\
 	$\hat y_i$: & $i$-th Prediction/Estimation (predicted label)
 \end{tabular}
 
 $$
-	\hat y_i = \sigma(x_i \theta) = \sigma \left(\sum_{j = 1}^d x_{ij} \theta_j \right)
+	\hat y_i = \sigma(x_i \theta) = \sigma \left(\theta_0 + \sum_{j = 1}^d x_{ij} \theta_j \right)
 $$
 with
 $$
@@ -254,7 +268,7 @@ $$
 
 \subsubsection{Cost function}
 \begin{tabular}{ll}
-	$n$: & number of labels
+	$n$: & Number of labels
 \end{tabular}
 $$
 	C(\theta) = - \frac 1 n \sum_{i = 1}^n \mathcal L(\hat y_i, y_i)
@@ -267,11 +281,13 @@ Changes the model in order to improve the loss function/estimation
 	\item Make use of an iterative method e.g. Gradient Descent
 \end{itemize}
 
+
+\pagebreak
 \section{Computational Graphs}
 \begin{itemize}
 	\item Directional graph
-	\item Matrix operations are represented as compute graphs
-	\item Vertex nodes are variables or operators like $+, -, *, /, log(), exp(), \dots$
+	\item Matrix operations are represented as compute nodes
+	\item Vertex nodes are variables or operators like $+, -, ⋅, /, log(), exp(), \dots$
 	\item Directional edges show flow of inputs to vertices
 	\item Neural network can be represented as computational graph
 \end{itemize}
@@ -290,10 +306,10 @@ $$
 	\includegraphics[width=\columnwidth]{figures/comp_graph_nn.png}
 \end{figure}
 
+
+\pagebreak
 \section{Neural Network}
 \subsection{Activation Functions}
-\textbf{Description} \\
-%TODO
 
 \textbf{Parameters:} \\
 \begin{tabular}{ll}
@@ -308,8 +324,8 @@ $$
 \subsubsection{Sigmoid}
 \begin{itemize}
 	\item Used for Binary Classification to output a probability matching first or second class
-	\item \textbf{Output:} $\hat y = (0, 1)$
-	\item If used as activation function in hidden layer (typically it is not)
+	\iprops Output: $\hat y = (0, 1)$
+	\iprops If used as activation function in hidden layer (typically it is not)
 	\begin{itemize}
 		\item[\cons] Output is always positive
 		\item[\cons] Saturates for high positive or low negative values → kills the gradient flow
@@ -335,16 +351,17 @@ $$
 \subsubsection{Softmax}
 \begin{itemize}
 	\item Used for Multiclass Classification to output a probability matching the $i$-th class
-	\item \textbf{Output:} $\hat y_j = (0, 1)$
+	\iprops Output: $\hat y_j = (0, 1)$
 \end{itemize}
 
 $$
-	\hat y_j = \frac{e^{s_j}}{\sum_{k = 1, k ≠ j}^{C} e^{s_k}}
+	\hat y_j = \frac{e^{s_j}}{\sum_{k = 1}^{C} e^{s_k}}
 $$
 
 
 \subsubsection{Tanh (Hyperbolic Tanjant Function)}
 \begin{itemize}
+	\ipros Zero-centered
 	\item[\cons] Saturates for high positive or low negative values → kills the gradient flow
 \end{itemize}
 
@@ -367,12 +384,12 @@ $$
 
 \subsubsection{ReLU (Rectified Linear Units)}
 \begin{itemize}
-	\item Standard choice for activation function
+	\iprops Standard choice for activation function
 	\item[\pros] Does not saturate
 	\item[\pros] Large and consistent gradients
 	\item[\pros] Fast convergence
 	\item[\cons] Dead ReLU if output is zero
-	\item Initialization of ReLU neurons with slightly positive biases (e.g. $0.01$) → Likely to stay active for most inputs
+	\iprops Initialization of ReLU neurons with slightly positive biases (e.g. $0.01$) → Likely to stay active for most inputs
 \end{itemize}
 
 \begin{tabularx}{\columnwidth}{XX}	
@@ -399,7 +416,7 @@ $$
 
 \begin{tabularx}{\columnwidth}{XX}	
 	$$
-		h = \max(0.1s, s)
+		h = \max(0.01s, s)
 	$$ &\\&
 	
 	\begin{tikzpicture}
@@ -409,13 +426,14 @@ $$
 	axis y line=middle,
 	axis x line=middle,
 	]
-	\addplot+[domain=-10:10, samples=100, mark=none] {max(0.1*x,x)};
+	\addplot+[domain=-10:10, samples=100, mark=none] {max(0.01*x,x)};
 	\end{axis}
 	\end{tikzpicture}
 \end{tabularx}
 
 \subsubsection{Parametric ReLU}
 \begin{itemize}
+	\iprops $\alpha$ is a learnable parameter
 	\item[\pros] Does not die
 \end{itemize}
 
@@ -468,11 +486,11 @@ $$
 
 \subsection{Loss Function}
 \subsubsection{Description}
-A function to measure the goodness of the predictions
 \begin{itemize}
-	\item Large loss $\implies$ bad predictions
+	\item A function to measure the goodness of the predictions
 	\item Goal: Minimize the loss $\iff$ Find better predictions
-	\item Choice of the loss function depends on the concrete problem or the distribution of the target variable
+	\item[\props] Large loss $\implies$ bad predictions	
+	\iprops Choice of the loss function depends on the concrete problem or the distribution of the target variable
 \end{itemize}
 
 \subsubsection{Parameters}
@@ -487,9 +505,10 @@ A function to measure the goodness of the predictions
 \subsubsection{L1 Loss}
 \begin{itemize}
 	\item Sum of absolute differences
-	\item Robust (cost of outliers is linear)
-	\item Costly to optimize
-	\item Optimum is median
+	\item[\props] Optimum is the median
+	\item[\props] Robust (cost of outliers is linear)
+	\item[\cons] Costly to optimize
+	
 \end{itemize}
 $$
 	\mathcal L(y, \hat y; \theta) = \frac 1 n \sum_i^n ||y_i - \hat y_i||_1
@@ -498,9 +517,10 @@ $$
 \subsubsection{L2/MSE Loss}
 \begin{itemize}
 	\item Sum of squared differences
-	\item Prone to outliers
-	\item Compute-efficient optimization
-	\item Optimum is mean
+	\item[\props] Optimum is the mean
+	\item[\props] Prone to outliers
+	\item[\pros] Compute-efficient optimization
+	
 \end{itemize}
 $$
 	\mathcal L(y, \hat y; \theta) = \frac 1 n \sum_i^n ||y_i - \hat y_i||_2^2
@@ -513,7 +533,7 @@ $$
 
 \subsubsection{Cross Entropy}
 \begin{itemize}
-	\item Loss is typically always $> 0$ → Always improvement
+	\iprops Loss is typically always $> 0$ → Always improvement
 \end{itemize}
 $$
 	\mathcal L(y, \hat y; \theta) = - \frac 1 n \sum_{i = 1}^n \sum_{j = 1}^k (y_{ij} \log \hat y_{ij})
@@ -521,7 +541,7 @@ $$
 
 \subsubsection{Hinge Loss (SVM Loss)}
 \begin{itemize}
-	\item Loss can become $= 0$ → Saturation
+	\iprops Loss can become $= 0$ → Saturation
 \end{itemize}
 $$
 	\mathcal L(y, \hat y; \theta) = \frac 1 n \sum_{i = 1}^n \sum_{{j = 1,} \atop {j ≠ gt}}^k \max(0, \hat y_{ij} - \hat y_{i,gt} + 1)
@@ -529,6 +549,7 @@ $$
 
 
 \subsection{Optimization Functions}
+Changes the model in order to improve the loss function/estimation
 \subsubsection{General Optimization}
 \begin{itemize}
 	\item \textbf{Goal:} $\theta^* = \arg\min f(\theta, x, y)$
@@ -553,8 +574,8 @@ $$
 \subsubsection{Gradient Descent}
 \begin{itemize}
 	\item Finds local minimum
-	\item Does not guarantee to find global optimum
 	\item Does gradient steps in direction of negative gradient
+	\iprops Does not guarantee to find global optimum
 	\item[\cons] Requires a lot of memory $\implies$ extremely expensive
 \end{itemize}
 
@@ -582,7 +603,7 @@ $$
 		\item Smaller batch size $\implies$ Greater variance in the gradients
 		\item Is mostly limited by GPU memory
 	\end{itemize}
-	\item Epoch: Complete pass through training set
+	\iprops Epoch: Complete pass through training set
 	\item[\cons] Cannot independently scale directions
 	\item[\cons] Need to have conservative min learning rate to avoid divergence
 	\item[\cons] Is slower than necessary
@@ -596,8 +617,8 @@ Parameters: \\
 	$f(\theta, x_{1..m}, y_{1..m})$: & Function describing the neural network (including loss function) \\
 	$x_{1..m}$: & Input vectors for one minibatch \\
 	$y_{1..m}$: & Ground truth for one minibatch \\
-	$\theta^k = \{W, b\}$: & Model Parameters at step $k$\\
-	$k$: & iteration in current epoch \\
+	$\theta^k = \{W, b\}$: & Model Parameters at iteration $k$\\
+	$k$: & Iteration in current epoch \\
 	$\alpha$: & Learning rate
 \end{tabular} \\
 
@@ -629,7 +650,7 @@ Parameters: \\
 	$\theta^k = \{W, b\}$: & Model Parameters at step $k$\\
 	$\alpha$: & Learning rate \\
 	$\beta$: & Accumulation rate (friction, momentum), default: 0.9 \\
-	$v^k$: & velocity at step $k$ \\
+	$v^k$: & Velocity at step $k$ \\
 \end{tabular} \\
 
 Gradient step:
@@ -659,7 +680,7 @@ Parameters: \\
 	$\theta^k = \{W, b\}$: & Model Parameters at step $k$\\
 	$\alpha$: & Learning rate \\
 	$\beta$: & Accumulation rate (friction, momentum), default: 0.9 \\
-	$v^k$: & velocity at step $k$ \\
+	$v^k$: & Velocity at step $k$ \\
 \end{tabular} \\
 
 Gradient step:
@@ -701,7 +722,7 @@ $$
 $$
 where $a \circ b$ is an element-wise multiplication
 
-\subsubsection{Adaptive Momemt Esimation (Adam)}
+\subsubsection{Adaptive Momemt Estimation (Adam)}
 \begin{itemize}
 	\item Combines Momentum and RMSProp
 	\item Combines first and second order momentum
@@ -734,7 +755,7 @@ where $m^0 = v^0 = 0$
 
 \subsubsection{Newton's Method}
 \begin{itemize}
-	\item Computation complexity of inversion per iteration: $\mathcal O(k^3)$
+	\iprops Computation complexity of inversion per iteration: $\mathcal O(k^3)$
 \end{itemize}
 
 Parameters: \\
@@ -757,9 +778,9 @@ $$
 
 \subsubsection{Broyden-Fletcher-Goldfarb-Shanno algorithm (BFGS and L-BFGS)}
 \begin{itemize}
-	\item Belongs to the family of quasi-Newton methods
-	\item Have an approximation of the inverse of the Hessian
-	\item Computation complexity of inversion per iteration:
+	\item[\props] Belongs to the family of quasi-Newton methods
+	\iprops Have an approximation of the inverse of the Hessian
+	\iprops Computation complexity of inversion per iteration:
 	\begin{itemize}
 		\item BFGS: $\mathcal O(n^2)$
 		\item L-BFGS: $\mathcal O(n)$
@@ -773,7 +794,7 @@ $$
 
 \subsubsection{Gauss-Newton}
 \begin{itemize}
-	\item True 2nd derivatives are often hard to obtain → Approximate
+	\item Approximates 2nd derivatives since there are often hard to obtain
 \end{itemize}
 
 Parameters: \\
@@ -814,7 +835,8 @@ $$
 
 \subsubsection{Levenberg-Marquardt}
 \begin{itemize}
-	\item Avoids slow convergence in components with a small gradient
+	\item Scales each component of the gradient according to the curvature
+	\ipros Avoids slow convergence in components with a small gradient
 \end{itemize}
 
 Parameters: \\
@@ -838,8 +860,8 @@ $$
 \subsubsection{Learning Rate Decay}
 \begin{tabular}{ll}
 	$\alpha_0$: & Initial learning rate (e.g. 0.1) \\
-	$t$: & factor by which the learning rate is decayed \\
-	$epoch$: & epoch of current run
+	$t$: & Factor by which the learning rate is decayed \\
+	$epoch$: & Epoch of current run
 \end{tabular} \\
 
 \textbf{Learning rate decays:}
@@ -901,6 +923,10 @@ $$
 $$
 
 \subsubsection{Weight Decay}
+\begin{itemize}
+	\iprops Penalizes large weights
+	\iprops Improves generalization
+\end{itemize}
 Parameters: \\
 \begin{tabular}{ll}
 	$f(\theta, x_{1..n}, y_{1..n})$: & Function describing the neural network (including loss function) \\
@@ -930,7 +956,7 @@ Stop training as soon as the model begins overfitting
 
 \subsubsection{Dropout}
 \begin{itemize}
-	\item Disable a random set of neurons (typically $50 \%$)
+	\item Disable a random set of neurons with probability $p$ (default: $p = 50 \%$)
 	\iprops Intuition: Use half of the network:
 	\begin{itemize}
 		\item[→] Redundant representations
@@ -939,7 +965,7 @@ Stop training as soon as the model begins overfitting
 	\end{itemize}
 	\item Testing:
 	\begin{itemize}
-		\item Disable dropout
+		\item Disable dropout (all neurons are turned on)
 		\item Multiply with dropout probability: $s_j' = s_j ⋅ p$
 	\end{itemize}
 	\icons Reduces the effective capacity of a model → More training time
@@ -955,7 +981,7 @@ Stop training as soon as the model begins overfitting
 	\iprops All biases of the layers before BN can be set to zero, since they will be canceled out by BN anyway
 	\item Testing:
 	\begin{itemize}
-		\item Compute mean $\mu_{test}$ and variance $\sigma^2_{test}$ by running an exponentially weighted averages across training minibatches: \\
+		\item Compute mean $\mu_{test}$ and variance $\sigma^2_{test}$ by running an exponentially weighted averaged across training minibatches: \\
 		$Var_{running} = \beta_m ⋅ Var_{running} + (1 - \beta_m) ⋅ Var_{minibatch}$ \\
 		$\mu_{running} = \beta_m ⋅ \mu_{running} + (1 - \beta_m) ⋅ \mu_{minibatch}$ \\
 	\end{itemize}
@@ -1005,7 +1031,7 @@ $$
 
 
 
-
+\pagebreak
 \section{Fully Connected Neural Network}
 \subsection{Structure}
 
@@ -1021,11 +1047,12 @@ $$
 		$k$: & Index of weight in neuron (neuron of previous layer) \\
 	\end{tabular} \\	
 	$l$: & Depth: number of layers (All hidden and the output layer - no input layer)\\
-	$m$: & Width: number of neurons in layer (Can be different for each layer) \\
-	$n$: & Number of weights in neuron \\
-	$\hat y_i$: & Computed output \\
+	$m_j$: & Width: number of neurons in layer $i$ (Can be different for each layer) \\
+	%$n$: & Number of weights in neuron \\
+	$\hat y_i$: & Computed output/Prediction \\
 	$y_i$: & Ground truth targets \\
-	$\mathcal L(y, \hat y, \theta)$: & Loss function
+	$\mathcal L(y, \hat y, \theta)$: & Loss function \\
+	$a(s)$: & Activation function
 \end{tabular} ~\\
 
 \textbf{Graphical Representation}
@@ -1044,28 +1071,29 @@ $$
 	h_{i,j} = a(s_{i,j})
 $$
 $$
-	s_{i,j} = b_{i,j} + \sum_{k = 1}^m h_{i-1,k} ⋅ w_{i,j,k}
+	s_{i,j} = b_{i,j} + \sum_{k = 1}^{m_{i-1}} h_{i-1,k} ⋅ w_{i,j,k}
 $$
 $$
-	s_{1,j} = b_{1,j} + \sum_{k = 1}^m x_k ⋅ w_{1,j,k}
+	s_{1,j} = b_{1,j} + \sum_{k = 1}^{m_{i-1}} x_k ⋅ w_{1,j,k}
 $$
 
 \subsection{Number of weights}
 \begin{tabular}{ll}	
 	$l$: & Depth: number of layers \\
 	$m_i$: & Width: number of neurons in layer $i$ (Here: layer $0$ is the input layer)\\
+	$a$ & Number of parameters of the activation functions
 \end{tabular} ~\\
 
 Number of weights is defined as:
 $$
-	\sum_{i = 1}^l m_i ⋅ m_{i-1} + m_i
+	a + \sum_{i = 1}^l m_i ⋅ m_{i-1} + m_i
 $$
 
 \subsection{Forward and Backward Pass}
 \subsubsection{Forward Pass/ Forward Propagation}
 Use formulas to calculate loss:
 $$
-	s_{1,1} = b_{1,1} + \sum_{k = 1}^m x_k ⋅ w_{1,1,k} \tab \dots \tab L = \mathcal L(y_j, \hat y_j)
+	s_{1,1} = b_{1,1} + \sum_{k = 1}^{m_0} x_k ⋅ w_{1,1,k} \tab \dots \tab L = \mathcal L(y_j, \hat y_j, \theta)
 $$
 
 \subsection{Backward Pass/Backward Propagation}
@@ -1076,12 +1104,12 @@ $$
 
 \textbf{Weights of second last layer:}
 $$
-	\frac{\partial L}{\partial w_{l-1,j,k}} = \sum_{o = 1}^m \frac{\partial L}{\partial \hat y_o} ⋅ \frac{\partial \hat y_o}{\partial s_{l,o}} ⋅ \frac{\partial s_{l,o}}{\partial h_{l-1, j}} ⋅ \frac{\partial h_{l-1, j}}{\partial s_{l-1,j}} ⋅ \frac{\partial s_{l-1,j}}{\partial w_{l-1,j,k}}
+	\frac{\partial L}{\partial w_{l-1,j,k}} = \sum_{o = 1}^{m_l} \frac{\partial L}{\partial \hat y_o} ⋅ \frac{\partial \hat y_o}{\partial s_{l,o}} ⋅ \frac{\partial s_{l,o}}{\partial h_{l-1, j}} ⋅ \frac{\partial h_{l-1, j}}{\partial s_{l-1,j}} ⋅ \frac{\partial s_{l-1,j}}{\partial w_{l-1,j,k}}
 $$
 
 \textbf{General:}
 $$
-	\frac{\partial L}{\partial w_{i,j,k}} = \sum_{o_1 = 1}^m \dots \sum_{o_p = 1}^m \frac{\partial L}{\partial \hat y_{o_1}} ⋅ \frac{\partial \hat y_{o_1}}{\partial s_{l,o_1}} ~~⋅~~ \frac{\partial s_{l,o_1}}{\partial h_{l-1, o_2}} ⋅ \frac{\partial h_{l-1, o_2}}{\partial s_{l-1,o_2}} ⋅ \dots ⋅ \frac{\partial s_{i+1,o_p}}{\partial h_{i, j}} ⋅\frac{\partial h_{i, j}}{\partial s_{i,j}} ⋅ \frac{\partial s_{i,j}}{\partial w_{i,j,k}}
+	\frac{\partial L}{\partial w_{i,j,k}} = \sum_{o_1 = 1}^{m_{i+1}} \dots \sum_{o_{l-i} = 1}^{m_l} \frac{\partial L}{\partial \hat y_{o_1}} ⋅ \frac{\partial \hat y_{o_1}}{\partial s_{l,o_1}} ~~⋅~~ \frac{\partial s_{l,o_1}}{\partial h_{l-1, o_2}} ⋅ \frac{\partial h_{l-1, o_2}}{\partial s_{l-1,o_2}} ⋅ \dots ⋅ \frac{\partial s_{i+1,o_{l-i}}}{\partial h_{i, j}} ⋅\frac{\partial h_{i, j}}{\partial s_{i,j}} ⋅ \frac{\partial s_{i,j}}{\partial w_{i,j,k}}
 $$
 
 \pagebreak
@@ -1096,14 +1124,21 @@ $$
 \begin{itemize}
 	\item Split dataset into
 	\begin{itemize}
-		\item Training data (e.g. 60\%, 80\%) - Used to train the model
-		\item Validation data (e.g. 20\%, 10\%) - Validate the current model to find the best hyperparameters
-		\item Test data (e.g. 20\%, 10\%) - Is only used once in the end
+		\item Training set (e.g. 60\%, 80\%) - Used to train the neural network
+		\item Validation set (e.g. 20\%, 10\%) - Validate the current model to find the best hyperparameters
+		\item Test set (e.g. 20\%, 10\%) - Is only used once in the end
 	\end{itemize}
 \end{itemize}
 
+\subsection{Obtaining the model}
+\begin{enumerate}
+	\item Estimating using current model
+	\item Calculating loss
+	\item Optimizing the model
+\end{enumerate}
+
 \subsection{Weight initialization}
-\textbf{Bad choice:} \\
+\textbf{Bad choice:}
 \begin{itemize}
 	\item All weights $= 0$ → No symmetry breaking
 	\item Small Random Numbers → Output becomes zero using tanh as activation function → Vanishing gradient
@@ -1112,7 +1147,7 @@ $$
 
 \subsubsection{Xavier Initialization}
 \begin{itemize}
-	\item Gaussian with zero mean and $var(w) = \frac 1 n$ ($n$: number of weight per neuron)
+	\item Gaussian with zero mean and $Var(w) = \frac 1 n$ ($n$: number of input neurons)
 	\item For ReLU: $Var(w) = \frac 2 n$
 \end{itemize}
 
@@ -1151,7 +1186,7 @@ $$
 	\item Manual search:
 	\begin{itemize}
 		\item Find out the optimal hyperparameters manually
-		\item most common
+		\item Most common
 	\end{itemize}
 	\item Grid search:
 	\begin{itemize}
@@ -1179,7 +1214,7 @@ Example:
 \subsubsection{Underfitting}
 \begin{itemize}
 	\item Training and validation losses decreases even at the end of training
-	\item Reasons:
+	\iprops Reasons:
 	\begin{itemize}
 		\item Model is still learning
 	\end{itemize}
@@ -1193,7 +1228,7 @@ Example:
 \subsubsection{Overfitting}
 \begin{itemize}
 	\item Training loss decreases and validation loss increases
-	\item Reasons:
+	\iprops Reasons:
 	\begin{itemize}
 		\item Model is memorizing the training samples instead of generalizing
 	\end{itemize}
@@ -1212,7 +1247,7 @@ Example:
 \textbf{Validation set easier than training set:}
 \begin{itemize}
 	\item Validation loss is lower than training loss
-	\item Reasons:
+	\iprops Reasons:
 	\begin{itemize}
 		\item Validation set is easier than the training set
 		\item Bug in the implementation
@@ -1227,7 +1262,7 @@ Example:
 \textbf{Learning rate to low:}
 \begin{itemize}
 	\item Loss curves decrease almost linearly
-	\item Reasons:
+	\iprops Reasons:
 	\begin{itemize}
 		\item The initial Learning rate is too low
 	\end{itemize}
@@ -1241,7 +1276,7 @@ Example:
 \textbf{Learning rate to high:}
 \begin{itemize}
 	\item Loss curves decrease very quickly at the beginning and then remain on plateaus
-	\item Reasons:
+	\iprops Reasons:
 	\begin{itemize}
 		\item Learning rate is too big
 		\item Inconsistent dataset
@@ -1287,7 +1322,7 @@ Example:
 
 \subsubsection{Timings}
 \begin{itemize}
-	\item Measure how long each iteration takes (should be $< 500 ms$
+	\item Measure how long each iteration takes (should be $< 500 ms$)
 	\item Look for bottlenecks (e.g. Dataloading, Backpropagation)
 	\item Estimate total time
 \end{itemize}
@@ -1319,7 +1354,7 @@ Example:
 
 \textbf{Bad Practice/Common Mistakes}
 \begin{itemize}
-	\item Using single batch it did not overfit
+	\item Using single batch, it did not overfit
 	\item Forgot to toggle train/eval mode for network
 	\item Forgot to call \lstinline|.zero_grad()| (in PyTorch) before calling \lstinline|.backward()|
 	\item Passed softmaxed outputs to a loss function that expects raw logits
