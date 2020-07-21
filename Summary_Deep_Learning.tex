@@ -123,8 +123,13 @@
 %orange!50!black
 
 %user
-\newcommand{\cons}{\textcolor{red}{\textbf{-}}}
+\newcommand{\cons}{\textcolor{red}{\textbf{\textendash}}}
 \newcommand{\pros}{\textcolor{green}{\textbf{+}}}
+\newcommand{\props}{$\circ$}
+
+\newcommand{\icons}{\item[\cons]}
+\newcommand{\ipros}{\item[\pros]}
+\newcommand{\iprops}{\item[\props]}
 
 
 %TODO
@@ -894,14 +899,109 @@ Enforces that the weights have similar values
 $$
 	R(\theta) = \sum_{i = 1}^n \theta_i^2
 $$
+
+\subsubsection{Weight Decay}
+Parameters: \\
+\begin{tabular}{ll}
+	$f(\theta, x_{1..n}, y_{1..n})$: & Function describing the neural network (including loss function) \\
+	$x_{1..n}$: & Input vectors for all $n$ training samples \\
+	$y_{1..n}$: & Ground truth for all $n$ training samples \\
+	$\theta^k = \{W, b\}$: & Model Parameters at step $k$ \\
+	$\alpha$: & Learning rate \\
+	$\lambda$: & Regularization rate \\
+	$R(\theta^k)$: & L2 Regularization
+\end{tabular} ~\\
+
+Add regularization term to Gradient step:
+$$
+	\theta^{k + 1} = \theta^k - \alpha \nabla_\theta f(\theta^k, x_{1..n}, y_{1..n}) - \lambda R(\theta^k)
+$$
+
+\subsubsection{Early Stopping}
+Stop training as soon as the model begins overfitting
+
+\subsubsection{Bagging and Ensemble Methods}
+\begin{itemize}
+	\item Train multiple models and average their results
+	\item Use different optimization functions, loss functions, ... for each model
+	\item[\pros] If errors are uncorrelated, the expected combined error will decrease linearly with the ensemble size
+\end{itemize}
 	
 
 \subsubsection{Dropout}
-%TODO
+\begin{itemize}
+	\item Disable a random set of neurons (typically $50 \%$)
+	\iprops Intuition: Use half of the network:
+	\begin{itemize}
+		\item[→] Redundant representations
+		\item[→] Base your scores on more features
+		\item[→] Reducing co-adaptations between neurons
+	\end{itemize}
+	\item Testing:
+	\begin{itemize}
+		\item Disable dropout
+		\item Multiply with dropout probability: $s_j' = s_j ⋅ p$
+	\end{itemize}
+	\icons Reduces the effective capacity of a model → More training time
+\end{itemize}
 
-\subsubsection{Early Stopping}
-%TODO
+\subsubsection{Batch Normalization (BN)}
+\begin{itemize}
+	\item Goal: Activations do not die out
+	\item Normalizes the mean and the variance of the inputs to the activation functions
+	\item Is applied after Fully Connected (or Convolutional) Layers and before non-linear activation functions
+	\ipros Very deep nets are much easier to train → more stable gradients
+	\iprops Can be undone by the network with: $\gamma^{(k)} = \sqrt{Var[s^{(k)}]}, \beta^{(k)} = \mathbb E[s^{(k)}]$
+	\iprops All biases of the layers before BN can be set to zero, since they will be canceled out by BN anyway
+	\item Testing:
+	\begin{itemize}
+		\item Compute mean $\mu_{test}$ and variance $\sigma^2_{test}$ by running an exponentially weighted averages across training minibatches: \\
+		$Var_{running} = \beta_m ⋅ Var_{running} + (1 - \beta_m) ⋅ Var_{minibatch}$ \\
+		$\mu_{running} = \beta_m ⋅ \mu_{running} + (1 - \beta_m) ⋅ \mu_{minibatch}$ \\
+	\end{itemize}
+\end{itemize}
 
+\textbf{Parameters:} \\
+\begin{tabular}{ll}
+	$s^k$: & Output of the Fully Connected or Convolutional Layer before the Batch Normalization Layer \\
+	$\mathbb{E}[s^k]$: & Mean of the mini-batch examples over feature k \\
+ 	$Var[s^k]$: & Variance of the mini-batch examples over feature k \\
+ 	$\gamma^{(k)}, \beta^{(k)}$: & Parameters optimized during Backpropagation
+\end{tabular} ~\\
+
+1. Normalize:
+$$
+	\hat s^{(k)} = \frac{s^{(k)} - \mathbb E[s^{(k)}]}{\sqrt{Var[s^{(k)}]}}
+$$
+
+2. Allow the network to change the range:
+$$
+	s'^{(k)}  = \gamma^{(k)} \hat s^{(k)} + \beta^{(k)}
+$$
+
+\subsubsection{Other Normalizations}
+\begin{itemize}
+	\item Layer Norm
+	\item Instance Norm
+	\item Group Norm
+\end{itemize}
+
+
+
+\subsubsection{Data Augmentation}
+\begin{itemize}
+	\item Classifier has to be invariant to a wide variety of transformations → Synthesize data simulating plausible transformations
+	\iprops Training: Random Crops, Testing: Fixed Set of Crops
+	\iprops Use same data augmentation when comparing two networks
+	\iprops Consider data augmentation a part of your network design
+	\item Augmentations:
+	\begin{itemize}
+		\item Flip
+		\item Crop
+		\item Brightness and contrast changes
+		\item ... 
+	\end{itemize}
+\end{itemize}
 
 
 
