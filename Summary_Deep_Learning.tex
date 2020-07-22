@@ -1114,6 +1114,502 @@ $$
 
 \pagebreak
 
+\section{Convolutional Neural Network}
+\subsection{Advantages over FCNNs}
+\textbf{Using deep networks:}
+\begin{itemize}
+	\item Fully Connected Neural Networks:
+	\begin{itemize}
+		\icons No structure
+		\icons Just brute force
+		\icons Optimization becomes hard
+		\icons Performance plateaus/drops
+	\end{itemize}
+	\item Convolutional Neural Network
+	\begin{itemize}
+		\ipros Layers with structure
+		\ipros Weight sharing (using the same weights for different parts of the image) 
+	\end{itemize}
+\end{itemize}
+
+\subsection{2D - Convolution}
+\subsubsection{General}
+\begin{itemize}
+	\item Stride = 1
+	\item Padding = 0
+\end{itemize}
+\paragraph{Mathematical representation} ~\\
+
+\textbf{Parameters:} \\
+\begin{tabular}{ll}
+	$x_{i,j,k}$: & Value of the pixel of the input image at position $i,j,k$ \\
+	$w_{i,j,k}$: & Value of the pixel of the kernel at position $i,j,k$ \\
+	$z_{i,j,k}$: & Value of the pixel of the output image (feature map) at position $i,j,k$ \\
+	& \begin{tabular}{ll}
+		$i$: & Index of channel \\
+		$j$: & Index of height \\
+		$k$: & Index of width
+	\end{tabular} \\
+	$C$: & Depth of the input image (number of channels) \\
+	$H_i$: & Height of the input image (number of pixels (vertical)) \\
+	$W_i$: & Width of the input image (number of pixels (horizontal)) \\
+	$H_K$: & Height of the kernel \\
+	$W_K$: & Width of the kernel \\
+	$H_o$: & Height of the output image \\
+	$W_o$: & Width of the output image \\
+	$b_{j,k}$: & Bias at position $j,k$
+\end{tabular} ~\\
+
+\textbf{Input image:} \\
+Image with the pixels: $x_{1,1,1}$ to $x_{C,H_i,W_i}$ \\
+
+\textbf{Kernel:} \\
+Filter image with the pixels: $w_{1,1,1}$ to $w_{C, H_K, W_K}$ \\
+
+\textbf{Output image:} \\
+Image with the pixels: $z_{1,1,1}$ to $z_{1, H_o, W_o}$ where:
+$$
+	z_{1,j,k} = b_{j,k} + \sum_{l = 1}^C \sum_{m = j}^{H_K + j - 1} \sum_{n = k}^{W_K + k - 1} w_{l,m-j+1,n-k+1} ⋅ x_{l,m,n}
+$$
+%$$
+%	\begin{array}{l}		
+%		\tab = w_{1,1,1} ⋅ x_{1,j,k} + \dots + w_{1,1, W_K} ⋅ x_{1,j,W_K + k - 1} + \\
+%		\tab\tab \vdots \\
+%		\tab + w_{1,H_K,1} ⋅ x_{1,H_K + j - 1,k} + \dots + w_{1,H_K, W_K} ⋅ x_{1,H_K + j - 1, W_K + k - 1} \\
+%		\tab[3] \vdots \\
+%		\tab w_{C,1,1} ⋅ x_{C,j,k} + \dots + w_{C,1, W_K} ⋅ x_{C,j,W_K + k - 1} + \\
+%		\tab\tab \vdots \\
+%		\tab + w_{C,H_K,1} ⋅ x_{C,H_K + j - 1,k} + \dots + w_{C,H_K, W_K} ⋅ x_{C,H_K + j - 1, W_K + k - 1} \\
+%		\tab + b_{j,k}
+%	\end{array}	
+%$$
+
+\paragraph{Graphical representation} ~\\
+\renewcommand{\arraystretch}{2}
+\textbf{Image:} \\
+\begin{tabular}{ccc}
+	Channel 1: & & Channel C: \\
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		$x_{1,1,1}$ & $x_{1,1,2}$ & $\dots$ & $x_{1,1,W}$ \\
+		\hline
+		$x_{1,2,1}$ & $x_{1,2,2}$ & $\dots$ & $x_{1,2,W}$ \\
+		\hline
+		$\vdots$ & $\vdots$ & $\ddots$ & $\vdots$ \\
+		\hline
+		$x_{1,H,1}$ & $x_{1,H,2}$ & $\dots$ & $x_{1,H,W}$ \\
+		\hline
+	\end{tabular}
+	&
+	$\dots$
+	&
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		$x_{C,1,1}$ & $x_{C,1,2}$ & $\dots$ & $x_{C,1,W}$ \\
+		\hline
+		$x_{C,2,1}$ & $x_{C,2,2}$ & $\dots$ & $x_{C,2,W}$ \\
+		\hline
+		$\vdots$ & $\vdots$ & $\ddots$ & $\vdots$ \\
+		\hline
+		$x_{C,H,1}$ & $x_{C,H,2}$ & $\dots$ & $x_{C,H,W}$ \\
+		\hline
+	\end{tabular}
+\end{tabular} ~\\
+
+
+\textbf{Kernel:} \\
+\begin{tabular}{ccc}
+	Channel 1: & & Channel C: \\
+	\begin{tabular}{|c|c|c|}
+		\hline
+		$w_{1,1,1}$ & $\dots$ & $w_{1,1,W_K}$ \\
+		\hline
+		$\vdots$ & $\ddots$ & $\vdots$ \\
+		\hline
+		$w_{1,H_K,1}$ & $\dots$ & $w_{1,H_K,W_K}$ \\
+		\hline
+	\end{tabular}
+	&
+	$\dots$
+	&
+	\begin{tabular}{|c|c|c|}
+		\hline
+		$w_{C,1,1}$ & $\dots$ & $w_{C,1,W_K}$ \\
+		\hline
+		$\vdots$ & $\ddots$ & $\vdots$ \\
+		\hline
+		$w_{C,H_K,1}$ & $\dots$ & $w_{C,H_K,W_K}$ \\
+		\hline
+	\end{tabular}
+\end{tabular} ~\\
+
+\textbf{Output image:} \\
+\begin{tabular}{ccc}
+	Channel 1: & & Channel C: \\
+	\begin{tabular}{|c|c|c|}
+		\hline
+		$z_{1,1,1}$ & $\dots$ & $z_{1,1,W_K}$ \\
+		\hline
+		$\vdots$ & $\ddots$ & $\vdots$ \\
+		\hline
+		$z_{1,H_K,1}$ & $\dots$ & $z_{1,H_K,W_K}$ \\
+		\hline
+	\end{tabular}
+	&
+	$\dots$
+	&
+	\begin{tabular}{|c|c|c|}
+		\hline
+		$z_{C,1,1}$ & $\dots$ & $z_{C,1,W_K}$ \\
+		\hline
+		$\vdots$ & $\ddots$ & $\vdots$ \\
+		\hline
+		$z_{C,H_K,1}$ & $\dots$ & $z_{C,H_K,W_K}$ \\
+		\hline
+	\end{tabular}
+\end{tabular}
+
+\paragraph{Graphical Example} ~\\
+\begin{figure}[H]
+	\includegraphics[width=\columnwidth]{figures/conv2d_ex.png}
+\end{figure}
+\renewcommand{\arraystretch}{1}
+
+\subsubsection{Stride}
+\begin{itemize}
+	\item Apply filter every S-th spatial location
+	\iprops Must hold $(H_i - H_K) / S, (W_i - W_K) / S \in \mathbb N_0$
+\end{itemize}
+
+\textbf{Parameters:} ~\\
+\begin{tabular}{ll}
+	$z_{j,k}$: & Value of the pixel of the original output image (with stride 1) at position $j,k$ \\
+	$z'_{j,k}$: & Value of the pixel of the output image with stride $S$ at position $j,k$ \\
+	& \begin{tabular}{ll}
+		$j$: & Index of height \\
+		$k$: & Index of width \\
+	\end{tabular} \\
+	$H_i$: & Height of the original image (number of pixels (vertical)) \\
+	$W_i$: & Width of the original input image (number of pixels (horizontal)) \\
+	$H_o$: & Height of the new output image (number of pixels (vertical)) \\
+	$W_o$: & Width of the new output image (number of pixels (horizontal)) \\
+	$H_K$: & Height of the kernel \\
+	$W_K$: & Width of the kernel \\
+	$S$: & Stride \\
+\end{tabular} ~\\
+
+\textbf{Original output image:} \\
+Original Output image with the pixels: $z_{1,1}$ to $z_{H_i,W_i}$ \\
+
+\textbf{New output image:} \\
+Output image with stride with the pixels: $z'_{1,1}$ to $z'_{H_o, W_o}$ where \\
+$$
+	z'_{j,k} = z_{2j-1,2k-1}
+$$ and
+$$
+	H_o = \frac{H_i - 1}{S} + 1, \tab W_o = \frac{W_i - 1}{S} + 1
+$$
+
+\subsubsection{Padding}
+\begin{itemize}
+	\item Surround original input image with pixels with value $0$
+	\iprops Allows the output image to have the same number of pixels as the input image
+\end{itemize}
+
+\paragraph{Mathematical representation} ~\\
+\textbf{Parameters:} ~\\
+\begin{tabular}{ll}
+	$x_{i,j,k}$: & Value of the pixel of the original input image (with padding 0) at position $i,j,k$ \\
+	$x'_{i,j,k}$: & Value of the pixel of the input image with Padding $P$ at position $i,j,k$ \\
+	& \begin{tabular}{ll}
+		$i$: & Index of channel \\
+		$j$: & Index of height \\
+		$k$: & Index of width \\
+	\end{tabular} \\
+	$C_i$: & Depth of the input image (number of channels) \\
+	$H_i$: & Height of the original image (number of pixels (vertical)) \\
+	$W_i$: & Width of the original input image (number of pixels (horizontal)) \\
+	$H_o$: & Height of the new input image (number of pixels (vertical)) \\
+	$W_o$: & Width of the new input image (number of pixels (horizontal)) \\
+	$P$: & Padding \\
+\end{tabular} ~\\
+
+\textbf{Original input image:} \\
+Original input image with the pixels: $x_{1,1,1}$ to $z_{C,H_i,W_i}$ \\
+
+\textbf{New input image:} \\
+Input image with padding with the pixels: $x'_{1,1,1}$ to $z'_{C, H_o, W_o}$ where \\
+$$
+	x'_{i,j,k} = \begin{cases}
+		x_{i, j - P, k - P} & \text{for } P < j ≤ j + P, P < k ≤ k + P \\
+		0 & \text{sonst}
+	\end{cases}
+$$ and
+$$
+	H_o = H_i + 2 ⋅ P, \tab W_o = W_i + 2 ⋅ P
+$$
+
+\paragraph{Graphical representation for P = 1} ~\\
+\renewcommand{\arraystretch}{2}
+\textbf{Original input image:} \\
+\begin{tabular}{ccc}
+	Channel 1: & & Channel C: \\
+	\begin{tabular}{|c|c|c|}
+		\hline
+		$x_{1,1,1}$ & $\dots$ & $x_{1,1,W_K}$ \\
+		\hline
+		$\vdots$ & $\ddots$ & $\vdots$ \\
+		\hline
+		$x_{1,H_K,1}$ & $\dots$ & $x_{1,H_K,W_K}$ \\
+		\hline
+	\end{tabular}
+	&
+	$\dots$
+	&
+	\begin{tabular}{|c|c|c|}
+		\hline
+		$x_{C,1,1}$ & $\dots$ & $x_{C,1,W_i}$ \\
+		\hline
+		$\vdots$ & $\ddots$ & $\vdots$ \\
+		\hline
+		$x_{C,H_i,1}$ & $\dots$ & $x_{C,H_i,W_i}$ \\
+		\hline
+	\end{tabular}
+\end{tabular} ~\\
+
+
+\textbf{New input image:} \\
+\begin{tabular}{ccc}
+	Channel 1: & & Channel C: \\
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		$0$ & $0$ & $\dots$ & $0$ & $0$ \\
+		\hline
+		$0$ & $x_{1,1,1}$ & $\dots$ & $x_{1,1,W_i}$ & $0$ \\
+		\hline
+		$\vdots$ & $\vdots$ & $\ddots$ & $\vdots$ & $\vdots$ \\
+		\hline
+		$0$ & $x_{1,H_i,1}$ & $\dots$ & $x_{1,H_i,W_i}$ & $0$ \\
+		\hline
+		$0$ & $0$ & $\dots$ & $0$ & $0$ \\
+		\hline
+	\end{tabular}
+	&
+	$\dots$
+	&
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		$0$ & $0$ & $\dots$ & $0$ & $0$ \\
+		\hline
+		$0$ & $x_{C,1,1}$ & $\dots$ & $x_{C,1,W_K}$ & $0$ \\
+		\hline
+		$\vdots$ & $\vdots$ & $\ddots$ & $\vdots$ & $\vdots$ \\
+		\hline
+		$0$ & $x_{C,H_K,1}$ & $\dots$ & $x_{C,H_K,W_K}$ & $0$ \\
+		\hline
+		$0$ & $0$ & $\dots$ & $0$ & $0$ \\
+		\hline
+	\end{tabular}
+\end{tabular} ~\\
+\renewcommand{\arraystretch}{1}
+
+
+
+
+
+\subsection{Convolution Layer}
+\begin{itemize}
+	\item Contains several filters of size $C_i * H_K * W_K$
+	\item Output image is the concatenations of the images generated by a 2D-Convolution with each filter
+	\iprops Each filter captures a different image characteristics
+	\iprops Numer of output channels is equal to the number of filters
+	\iprops Filter values are learnable by the network	
+	\iprops Feature Extraction: Computes a feature in a given region
+\end{itemize}
+
+\subsubsection{Mathematical representation}
+\textbf{Parameters:} \\
+\begin{tabular}{ll}
+	$x_{i,j,k}$: & Value of the pixel of the input image at position $i,j,k$ \\
+	$w_{i,o,j,k}$: & Value of the pixel of the kernel at position $i,o,j,k$ \\
+	$z_{i,j,k}$: & Value of the pixel of the output image at position $i,j,k$ \\
+	& \begin{tabular}{ll}
+		$i$: & Index of channel \\
+		$j$: & Index of height \\
+		$k$: & Index of width \\
+		$o$: & Index of the filters
+	\end{tabular} \\
+	$C_i$: & Depth of the input image (number of channels) \\
+	$H_i$: & Height of the input image (number of pixels (vertical)) \\
+	$W_i$: & Width of the input image (number of pixels (horizontal)) \\
+	$H_K$: & Height of the kernel \\
+	$W_K$: & Width of the kernel \\
+	$C_o$: & Depth of the output image \\
+	$H_o$: & Height of the output image \\
+	$W_o$: & Width of the output image \\
+	$b_{j,k}$: & Bias at position $j,k$ \\
+	$S$: & Stride \\
+	$P$: & Padding
+\end{tabular} ~\\
+
+\textbf{Input image:} \\
+Image with the pixels: $x_{1,1,1}$ to $x_{C,H_i,W_i}$ \\
+
+\textbf{Kernel:} \\
+Weight tensor with the pixels: $w_{1,1,1,1}$ to $w_{C_i, C_o, H_K, W_K}$ where
+$w_{1,o,1,1}$ to $w_{C_i, o, H_K, W_K}$ is the $o$-th filter image \\
+
+\textbf{Output image:} \\
+Image with the pixels: $z_{1,1,1}$ to $z_{C_o, H_o, W_o}$ where:
+$$
+	z_{i,j,k} = b_{j,k} + \sum_{l = 1}^{C_i} \sum_{m = j}^{H_K + j - 1} \sum_{n = k}^{W_K + k - 1} w_{l,i,m-j+1,n-k+1} ⋅ x_{l,m,n}
+$$
+
+\subsubsection{Output dimension}
+
+\textbf{Output dimensions:} ~\\
+$$
+	H_o = \left(\left\lfloor \frac{H_i + 2 ⋅ P - H_K}{S} \right\rfloor + 1\right)
+$$
+$$
+	W_o = \left(\left\lfloor \frac{W_i + 2 ⋅ P - W_K}{S} \right\rfloor + 1\right)
+$$
+
+\textbf{Output dimension for $N = H_i = W_i$ and $F = H_K = W_K$ (default):}
+$$
+	\left(\left\lfloor \frac{N + 2 ⋅ P - F}{S} \right\rfloor + 1\right) \times \left(\left\lfloor \frac{N + 2 ⋅ P - F}{S} \right\rfloor + 1\right)
+$$
+
+\subsubsection{Number of parameters}
+\begin{tabular}{ll}
+	$C_K$: & Depth of the kernel (number of channels) \\
+	$H_K$: & Height of the kernel \\
+	$W_K$: & Width of the kernel \\
+	$C_o$: & Depth of the output image (number of filters)\\
+\end{tabular} ~\\
+$$
+	\text{number of parameters} = (C_K ⋅ H_K ⋅ W_K + 1) ⋅ C_o
+$$
+
+\subsubsection{Types of convolutions}
+	\textbf{Valid convolution:} \\
+	$$
+		P = 0
+	$$
+	\textbf{Same convolution:} \\
+	Output size = input size:
+	$$
+		P = (F - 1) / 2
+	$$ where
+	$F = H_K = W_K$ (filter size)
+	
+\subsection{Pooling Layer}
+\begin{itemize}
+	\iprops Common used to shrink size of the image
+	\iprops Feature Selection: Picks the strongest activation in a region
+\end{itemize}
+
+\textbf{Parameters:} \\
+\begin{tabular}{ll}
+	$x_{i,j,k}$: & Value of the pixel of the input image at position $i,j,k$ \\
+	$z_{i,j,k}$: & Value of the pixel of the output image at position $i,j,k$ \\
+	& \begin{tabular}{ll}
+		$i$: & Index of channel \\
+		$j$: & Index of height \\
+		$k$: & Index of width \\
+	\end{tabular} \\
+	$C_i$: & Depth of the input image (number of channels) \\
+	$H_i$: & Height of the input image (number of pixels (vertical)) \\
+	$W_i$: & Width of the input image (number of pixels (horizontal)) \\
+	$H_K$: & Height of the kernel \\
+	$W_K$: & Width of the kernel \\
+	$C_o$: & Depth of the output image (number of channels) \\
+	$H_o$: & Height of the output image \\
+	$W_o$: & Width of the output image \\
+	$S$: & Stride \\
+	$F = H_K = W_K$: & Filter size (if $H_K = W_K$)
+\end{tabular} ~\\
+
+\subsubsection{Output dimension:}
+$$
+	C_o = C_i
+$$
+$$
+	H_o = \frac{H_i - H_K}{S} + 1
+$$
+$$
+	W_o = \frac{W_i - H_K}{S} + 1
+$$
+
+
+\subsubsection{Max Pooling}
+\begin{itemize}
+	\item Takes the maximum value of a region in the input image
+	\iprops Common settings: $F = 2, S = 2$ or $F = 3, S = 2$
+\end{itemize} ~\\
+
+\textbf{Input image:} \\
+Image with the pixels: $x_{1,1,1}$ to $x_{C,H_i,W_i}$ \\
+
+\textbf{Output image:} \\
+Image with the pixels: $z_{1,1,1}$ to $z_{1, H_o, W_o}$ where:
+$$
+	z_{i,j,k} = \max (x_{i,j,k}, \dots, x_{i,j,W_K + k - 1}, \dots, x_{i,H_K + j - 1,k}, \dots, x_{i,H_K + j - 1, W_K + k - 1})
+$$
+
+\subsubsection{Average Pooling}
+\begin{itemize}
+	\item Takes the average value of a region in the input image
+	\iprops Common settings: $F = 2, S = 2$ or $F = 3, S = 2$
+	\iprops Typically used deeper in the network
+\end{itemize}
+
+\textbf{Input image:} \\
+Image with the pixels: $x_{1,1,1}$ to $x_{C,H_i,W_i}$ \\
+
+\textbf{Output image:} \\
+Image with the pixels: $z_{1,1,1}$ to $z_{1, H_o, W_o}$ where:
+$$
+	z_{i,j,k} = (x_{i,j,k} + \dots + x_{i,j,W_K + k - 1} + \dots + x_{i,H_K + j - 1,k} + \dots + x_{i,H_K + j - 1, W_K + k - 1}) / H_K ⋅ W_K
+$$
+
+\subsection{ConvNet}
+\begin{itemize}
+	\item Is a concatenation of Conv Layers and activations
+\end{itemize}
+
+\subsubsection{Typically network architecture}
+\begin{itemize}
+	\item[] \begin{itemize}
+		\item[] \begin{itemize}
+			\item Convolution Layer
+			\item Activation Function
+			\item[] \tab $\vdots$
+			\item Convolution Layer
+			\item Activation Function
+		\end{itemize}
+		\item Pool Layer
+		\item[] \tab $\vdots$
+		\begin{itemize}
+			\item Convolution Layer
+			\item Activation Function
+			\item[] \tab $\vdots$
+			\item Convolution Layer
+			\item Activation Function
+		\end{itemize}
+		\item Pool Layer
+	\end{itemize}
+	\item 1 or 2 Fully Connected Layer
+\end{itemize}
+
+	
+
+
+
+
+
+
+\pagebreak
 \section{Training}
 \subsection{Learning}
 \begin{itemize}
