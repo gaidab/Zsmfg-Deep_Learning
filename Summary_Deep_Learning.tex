@@ -142,8 +142,8 @@
 %Chap 6: cc
 %Chap 7: cc
 %Chap 8: cc
-%Chap 9:
-%Chap 10:
+%Chap 9: cc
+%Chap 10: cc
 %Chap 11:
 %Chap 12:
 
@@ -176,6 +176,13 @@
 		\item Labels or target classes
 	\end{itemize}
 	\item Reinforcement Learning
+\end{itemize}
+
+\subsection{Common Performance Metrics}
+\begin{itemize}
+	\item \textbf{Top-1 score:} Check if a sample's top class (i.e., the one with the highest probability) is the same as its target label
+	\item \textbf{Top-5 score:} Check if your label is in your 5 first predictions (i.e. predictions with 5 highest probabilities)
+	\item \textbf{Top-5 error:} Percentage of test samples for which the correct class was not in the top 5 predicted classes
 \end{itemize}
 
 \pagebreak
@@ -1191,13 +1198,13 @@ $$
 	Channel 1: & & Channel C: \\
 	\begin{tabular}{|c|c|c|c|}
 		\hline
-		$x_{1,1,1}$ & $x_{1,1,2}$ & $\dots$ & $x_{1,1,W}$ \\
+		$x_{1,1,1}$ & $x_{1,1,2}$ & $\dots$ & $x_{1,1,W_i}$ \\
 		\hline
-		$x_{1,2,1}$ & $x_{1,2,2}$ & $\dots$ & $x_{1,2,W}$ \\
+		$x_{1,2,1}$ & $x_{1,2,2}$ & $\dots$ & $x_{1,2,W_i}$ \\
 		\hline
 		$\vdots$ & $\vdots$ & $\ddots$ & $\vdots$ \\
 		\hline
-		$x_{1,H,1}$ & $x_{1,H,2}$ & $\dots$ & $x_{1,H,W}$ \\
+		$x_{1,H_i,1}$ & $x_{1,H_i,2}$ & $\dots$ & $x_{1,H_i,W_i}$ \\
 		\hline
 	\end{tabular}
 	&
@@ -1205,13 +1212,13 @@ $$
 	&
 	\begin{tabular}{|c|c|c|c|}
 		\hline
-		$x_{C,1,1}$ & $x_{C,1,2}$ & $\dots$ & $x_{C,1,W}$ \\
+		$x_{C,1,1}$ & $x_{C,1,2}$ & $\dots$ & $x_{C,1,W_i}$ \\
 		\hline
-		$x_{C,2,1}$ & $x_{C,2,2}$ & $\dots$ & $x_{C,2,W}$ \\
+		$x_{C,2,1}$ & $x_{C,2,2}$ & $\dots$ & $x_{C,2,W_i}$ \\
 		\hline
 		$\vdots$ & $\vdots$ & $\ddots$ & $\vdots$ \\
 		\hline
-		$x_{C,H,1}$ & $x_{C,H,2}$ & $\dots$ & $x_{C,H,W}$ \\
+		$x_{C,H_i,1}$ & $x_{C,H_i,2}$ & $\dots$ & $x_{C,H_i,W_i}$ \\
 		\hline
 	\end{tabular}
 \end{tabular} ~\\
@@ -1245,28 +1252,18 @@ $$
 
 \textbf{Output image:} \\
 \begin{tabular}{ccc}
-	Channel 1: & & Channel C: \\
+	Channel 1: & &\\
 	\begin{tabular}{|c|c|c|}
 		\hline
-		$z_{1,1,1}$ & $\dots$ & $z_{1,1,W_K}$ \\
+		$z_{1,1,1}$ & $\dots$ & $z_{1,1,W_o}$ \\
 		\hline
 		$\vdots$ & $\ddots$ & $\vdots$ \\
 		\hline
-		$z_{1,H_K,1}$ & $\dots$ & $z_{1,H_K,W_K}$ \\
+		$z_{1,H_o,1}$ & $\dots$ & $z_{1,H_o,W_o}$ \\
 		\hline
 	\end{tabular}
 	&
-	$\dots$
 	&
-	\begin{tabular}{|c|c|c|}
-		\hline
-		$z_{C,1,1}$ & $\dots$ & $z_{C,1,W_K}$ \\
-		\hline
-		$\vdots$ & $\ddots$ & $\vdots$ \\
-		\hline
-		$z_{C,H_K,1}$ & $\dots$ & $z_{C,H_K,W_K}$ \\
-		\hline
-	\end{tabular}
 \end{tabular}
 
 \paragraph{Graphical Example} ~\\
@@ -1481,14 +1478,8 @@ $$
 $$
 
 \subsubsection{Number of parameters}
-\begin{tabular}{ll}
-	$C_K$: & Depth of the kernel (number of channels) \\
-	$H_K$: & Height of the kernel \\
-	$W_K$: & Width of the kernel \\
-	$C_o$: & Depth of the output image (number of filters)\\
-\end{tabular} ~\\
 $$
-	\text{number of parameters} = (C_K ⋅ H_K ⋅ W_K + 1) ⋅ C_o
+	\text{number of parameters} = (C_i ⋅ H_K ⋅ W_K + 1) ⋅ C_o
 $$
 
 \subsubsection{Types of convolutions}
@@ -1496,12 +1487,24 @@ $$
 	$$
 		P = 0
 	$$
+	
 	\textbf{Same convolution:} \\
 	Output size = input size:
 	$$
 		P = (F - 1) / 2
 	$$ where
-	$F = H_K = W_K$ (filter size)
+	$F = H_K = W_K$ (filter size) \\
+	
+	\textbf{$1 \times 1$ Convolution:} \\
+	\begin{itemize}
+		\item Keeps the dimension and scales the input
+		\iprops Same as having a fully connected layer with $C$ number of neurons
+		\iprops Used to shrink the number of channels
+		\iprops Adds a non-linearity
+	\end{itemize}	
+	$$
+		F = H_K = W_K = 1
+	$$
 	
 \subsection{Pooling Layer}
 \begin{itemize}
@@ -1573,6 +1576,64 @@ $$
 	z_{i,j,k} = (x_{i,j,k} + \dots + x_{i,j,W_K + k - 1} + \dots + x_{i,H_K + j - 1,k} + \dots + x_{i,H_K + j - 1, W_K + k - 1}) / H_K ⋅ W_K
 $$
 
+\subsection{Skip Connections}
+\begin{itemize}
+	\item Problems with deeper networks:
+	\begin{itemize}
+		\item Training becomes harder
+		\item Vanishing gradients
+	\end{itemize}
+	\item Add an output to an output of a later layer
+	\iprops Requires same dimension → Same convolutions are often used
+	\iprops Guaranteed it will not hurt performance, can only improve
+\end{itemize}
+
+\subsubsection{Mathematical Representation}
+\textbf{Parameters:} \\
+\begin{tabular}{ll}
+	$z^L$: & Output of layer $L$ \\
+	$W^L$: & Weight Tensor of layer $L$ (Values of the filter) \\
+	$b^L$: & Bias of layer $L$ \\
+	$a(x)$: & Activation function
+\end{tabular}
+
+e.g. \\
+$$
+	z^{L + 1} = a(W^{L + 1} x^L + b^{L + 1} + x^{L - 1})
+$$
+
+\subsubsection{Graphical Representation}
+\begin{figure}[H]
+	\includegraphics[width=0.5\columnwidth]{figures/res_block.png}
+\end{figure}
+
+\subsection{Inception Layer}
+\begin{itemize}
+	\item Uses several convolution layers and concatenates them afterwards
+	\item Uses $1 \times 1$ convolutions beforehand to shrink the channel size 
+	\iprops Used are same convolutions to keep the dimensions
+\end{itemize}
+
+Example: \\
+\begin{figure}[H]
+	\includegraphics[width=0.7\columnwidth]{figures/inception_layer.png}
+\end{figure}
+
+\subsection{Xception Net (Extreme Version of Inception)}
+\begin{itemize}
+	\item Filters are applied only at certain depths of the features
+	\item It is followed by a $1 \times 1$ convolution to shrink the channel size to $1$
+	\ipros Requires less computations
+\end{itemize}
+
+Example: \\
+\begin{figure}[H]
+	\includegraphics[width=0.7\columnwidth]{figures/xception_net.png}
+\end{figure}
+
+
+
+
 \subsection{ConvNet}
 \begin{itemize}
 	\item Is a concatenation of Conv Layers and activations
@@ -1602,8 +1663,200 @@ $$
 	\item 1 or 2 Fully Connected Layer
 \end{itemize}
 
-	
+\subsection{Classic Architectures}
+\subsubsection{LeNet}
+\begin{itemize}
+	\iprops $\sim 60k$ parameters
+	\iprops Use of tanh/sigmoid activations
+\end{itemize}
+\begin{figure}[H]
+	\includegraphics[width=\columnwidth]{figures/lenet.png}
+\end{figure}
 
+\subsubsection{AlexNet}
+\begin{itemize}
+	\iprops $\sim 60M$ parameters
+	\iprops Use of ReLU activations
+\end{itemize}
+\begin{figure}[H]
+	\includegraphics[width=\columnwidth]{figures/alexnet.png}
+\end{figure}
+
+\subsubsection{VGGNet}
+\begin{itemize}
+	\iprops Use of $3 \times 3$ Same convolution layers
+	\iprops Use of $2 \times 2$ MaxPool Layers
+	\iprops Large but simplicity makes it appealing
+	\iprops E.g. VGG-16: 16 layers with $138M$ parameters
+\end{itemize}
+\begin{figure}[H]
+	\includegraphics[width=\columnwidth]{figures/vggnet.png}
+\end{figure}
+
+\subsubsection{ResNet}
+\begin{itemize}
+	\item Uses Skip Connections
+	\iprops E.g. ResNet-152: $60M$ parameters
+\end{itemize}
+\begin{figure}[H]
+	\includegraphics[width=\columnwidth]{figures/resnet.png}
+\end{figure}
+
+\subsection{Fully Convolutional Network}
+\subsubsection{Types of Upsampling}
+\textbf{Interpolation}
+\begin{itemize}
+	\item Nearest neighbor interpolation
+	\item Bilinear interpolation
+	\item Bicubic interpolation
+\end{itemize}
+
+\textbf{Transposed Convolution (Up-convolution)} \\
+Is built of the following layers:
+\begin{enumerate}
+	\item Unpooling
+	\item Convolution
+\end{enumerate}
+
+\subsubsection{U-Net}
+\begin{itemize}
+	\item Is built of an encoder and a decoder
+	\iprops Uses skip connections
+	\iprops Is an autoencoder
+\end{itemize}
+\begin{figure}[H]
+	\includegraphics[width=0.7\columnwidth]{figures/u-net.png}
+\end{figure}
+
+\textbf{Encoder:}
+\begin{itemize}
+	\item Left side: Contradiction Path
+	\item Architecture:
+	\begin{itemize}
+		\item Repeated several times:
+		\begin{enumerate}
+			\item Unpadded $3 \times 3$ convolutions
+			\item ReLU activation
+			\item Unpadded $3 \times 3$ convolutions
+			\item ReLU activation
+			\item $2 \times 2$ maxpooling operation with stride 2
+		\end{enumerate}
+		\item At each downsampling step: number of channels is doubled		
+	\end{itemize}
+	\iprops Captures context of the image
+\end{itemize} ~\\
+
+\textbf{Decoder:}
+\begin{itemize}
+	\item Right side: Expansion Path
+	\item Architecture:
+	\begin{itemize}
+		\item Repeated several times:
+		\begin{enumerate}
+			\item $2 \times 2$ up-convolution
+			\item Concatenation of skip connections
+			\item Unpadded $3 \times 3$ convolutions
+			\item ReLU activation
+			\item Unpadded $3 \times 3$ convolutions
+			\item ReLU activation
+		\end{enumerate}
+		\item Final layer: $1 \times 1$ convolution layer to map the channels to classes		
+	\end{itemize}
+	\iprops Upsampling to recover spatial locations for assigning class labels to each pixel
+\end{itemize}
+	
+\pagebreak
+\section{Recurrent Neural Networks (RNN)}
+\begin{itemize}
+	\item Processes sequence data
+	\item Input/output can be sequences
+	\iprops Properties of the eigenvalues of $\theta_c$
+	\begin{itemize}
+		\item $|\lambda| < 1$: Vanishing gradient
+		\item $|\lambda| > 1$: Exploding gradient
+	\end{itemize}
+	\iprops Simple RNN uses tanh as activation function
+\end{itemize}
+
+\subsection{Structure}
+\textbf{Graphical Representation of a Multi-layer RNN}
+\begin{figure}[H]
+	\includegraphics[width=0.7\columnwidth]{figures/rnn.png}
+\end{figure}
+
+\subsection{Structure of one neuron}
+\textbf{Parameters:} \\
+\begin{tabular}{ll}
+	$x_t$: & Input at time $t$ \\
+	$\theta_c, \theta_x, \theta_h$: & Learnable parameters (time-independent) \\
+	$A_t$: & Hidden state at time $t$ \\
+	$A_{t-1}$: & Previous hidden state (at time $t-1$) \\
+	$h_t$: & Output at time $t$
+\end{tabular}
+
+\textbf{Mathematical Representation:}
+$$
+	A_t = \theta_c A_{t-1} + \theta_x x_t
+$$
+$$
+	h_t = \theta_h A_t
+$$
+
+\textbf{Graphical Representation:}
+\begin{figure}[H]
+	\includegraphics[width=0.3\columnwidth]{figures/rnn_neuron.png}
+\end{figure}
+
+\subsection{Long-Short Term Memory (LSTM)}
+\begin{itemize}
+	\iprops Fixed defined dimensions, i.e. $x_t, h_t \in \mathbb R^{n_1 \times \dots \times n_m}  ~\forall t$ with fixed $n_1, \dots, n_m$
+	\iprops Gate:
+	\begin{itemize}
+		\item Removes or add information to the cell
+		\item Is a multiplication with a sigmoid function
+	\end{itemize}
+	\iprops Cell prevents vanishing gradients
+	\iprops
+\end{itemize}
+
+\textbf{Parameters:} \\
+\begin{tabular}{ll}
+	$x_t$: & Input at time $t$ \\
+	$\theta_{xf}, \dots, \theta_{xg},\theta_{hf}, \dots, \theta_{hg}$: & Weights \\
+	$b_f, \dots, b_g$: & Biases \\
+	$\circ : \mathbb R^{n_1 \times \dots \times n_m} \times \mathbb R^{n_1 \times \dots \times n_m} → \mathbb R^{n_1 \times \dots \times n_m}$: & Element-wise tensor-multiplication
+\end{tabular}
+
+\textbf{Graphical Representation:}
+\begin{figure}[H]
+	\includegraphics[width=0.7\columnwidth]{figures/lstm_3.png}
+\end{figure}
+
+\textbf{Mathematical Representation:} \\
+Forget gate: Decides when to erase the cell state ($f_t = 0$: forget, $f_t = 1$: keep)
+$$
+	f_t = \sigma(\theta_{xf} x_t + \theta_{hf} h_{t-1} + b_f)
+$$
+Input gate: Decides which values will be updated
+$$
+	i_t = \sigma(\theta_{xi} x_t + \theta_{hi} h_{t-1} + b_i)
+$$
+Output gate: Decides which values will be outputted
+$$
+	o_t = \sigma(\theta_{xo} x_t + \theta_{ho} h_{t-1} + b_o)
+$$
+Cell Update:
+$$
+	g_t = \tanh(\theta_{xg} x_t + \theta_{hg} h_{t-1} + b_g)
+$$
+Cell: Transports the information through the unit
+$$
+	C_t = f_t \circ C_{t-1} + i_t \circ g_t
+$$
+Output:
+$$
+	h_t = o_t \circ \tanh(C_t)
+$$
 
 
 
@@ -1857,6 +2110,24 @@ Example:
 	\item Training set contains test data
 	\item Debug algorithm on test data
 \end{itemize}
+
+
+\pagebreak
+\section{Transfer Learning}
+\begin{itemize}
+	\item Reuse parts of already trained models to train a new model
+	\item Transfer Learning makes sense when
+	\begin{itemize}
+		\item task 1 (old task) and 2 (new task) have the same input
+		\item you have more data for task 1 than for task 2
+		\item the low-level features for task 1 could be useful to learn task 2
+	\end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+	\includegraphics[width=0.8\columnwidth]{figures/transfer_learning.png}
+	\caption*{Left: Already trained model, Right: New model}
+\end{figure}
 
 
 
