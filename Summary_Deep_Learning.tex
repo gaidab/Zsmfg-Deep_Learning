@@ -144,8 +144,8 @@
 %Chap 8: cc
 %Chap 9: cc
 %Chap 10: cc
-%Chap 11:
-%Chap 12:
+%Chap 11: cc
+%Chap 12: x
 
 %FINISHED Summary Chapter
 %Chap Machine Learning Basics: cf
@@ -1054,7 +1054,7 @@ $$
 		$k$: & Index of weight in neuron (neuron of previous layer) \\
 	\end{tabular} \\	
 	$l$: & Depth: number of layers (All hidden and the output layer - no input layer)\\
-	$m_j$: & Width: number of neurons in layer $i$ (Can be different for each layer) \\
+	$m_i$: & Width: number of neurons in layer $i$ (Here: layer $0$ is the input layer)\\
 	%$n$: & Number of weights in neuron \\
 	$\hat y_i$: & Computed output/Prediction \\
 	$y_i$: & Ground truth targets \\
@@ -1081,7 +1081,7 @@ $$
 	s_{i,j} = b_{i,j} + \sum_{k = 1}^{m_{i-1}} h_{i-1,k} ⋅ w_{i,j,k}
 $$
 $$
-	s_{1,j} = b_{1,j} + \sum_{k = 1}^{m_{i-1}} x_k ⋅ w_{1,j,k}
+	s_{1,j} = b_{1,j} + \sum_{k = 1}^{m_0} x_k ⋅ w_{1,j,k}
 $$
 
 \subsection{Number of weights}
@@ -1552,10 +1552,10 @@ $$
 \end{itemize} ~\\
 
 \textbf{Input image:} \\
-Image with the pixels: $x_{1,1,1}$ to $x_{C,H_i,W_i}$ \\
+Image with the pixels: $x_{1,1,1}$ to $x_{C_i,H_i,W_i}$ \\
 
 \textbf{Output image:} \\
-Image with the pixels: $z_{1,1,1}$ to $z_{1, H_o, W_o}$ where:
+Image with the pixels: $z_{1,1,1}$ to $z_{C_o, H_o, W_o}$ where:
 $$
 	z_{i,j,k} = \max (x_{i,j,k}, \dots, x_{i,j,W_K + k - 1}, \dots, x_{i,H_K + j - 1,k}, \dots, x_{i,H_K + j - 1, W_K + k - 1})
 $$
@@ -1568,10 +1568,10 @@ $$
 \end{itemize}
 
 \textbf{Input image:} \\
-Image with the pixels: $x_{1,1,1}$ to $x_{C,H_i,W_i}$ \\
+Image with the pixels: $x_{1,1,1}$ to $x_{C_i,H_i,W_i}$ \\
 
 \textbf{Output image:} \\
-Image with the pixels: $z_{1,1,1}$ to $z_{1, H_o, W_o}$ where:
+Image with the pixels: $z_{1,1,1}$ to $z_{C_o, H_o, W_o}$ where:
 $$
 	z_{i,j,k} = (x_{i,j,k} + \dots + x_{i,j,W_K + k - 1} + \dots + x_{i,H_K + j - 1,k} + \dots + x_{i,H_K + j - 1, W_K + k - 1}) / H_K ⋅ W_K
 $$
@@ -1816,7 +1816,6 @@ $$
 		\item Is a multiplication with a sigmoid function
 	\end{itemize}
 	\iprops Cell prevents vanishing gradients
-	\iprops
 \end{itemize}
 
 \textbf{Parameters:} \\
